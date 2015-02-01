@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.pdokos.arithmetic
+OpenIDE-Module-Localizing-Bundle: loc_bundle/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

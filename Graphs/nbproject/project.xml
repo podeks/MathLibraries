@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.pdokos.graphs</code-name-base>
+            <suite-component/>
+            <module-dependencies/>
+            <public-packages>
+                <package>api</package>
+                <package>base</package>
+                <package>builder</package>
+                <package>tools</package>
+            </public-packages>
+        </data>
+    </configuration>
+</project>
