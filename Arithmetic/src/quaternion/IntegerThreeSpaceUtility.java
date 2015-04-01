@@ -189,8 +189,8 @@ public class IntegerThreeSpaceUtility {
                 for (int i = 0; i < 3; i++) {  //{0, a, a} {a, 0, a} {a, a, 0}
                     orbit.add(tau(i, fundRep));
                 }
-                int[] rep=axialHalfRotation(2, fundRep);
-                for (int i = 0; i < 3; i++) { //{0, -a, a} {a, 0, -a} {-a, a, 0})
+                int[] rep=axialHalfRotation(1, fundRep); // {0, a, -a} {-a, 0, a} {a, -a, 0}
+                for (int i = 0; i < 3; i++) { // axis2: {0, -a, a} {a, 0, -a} {-a, a, 0})
                     orbit.add(tau(i, rep));
                 }
 
@@ -202,33 +202,36 @@ public class IntegerThreeSpaceUtility {
                 }
             }
 
-        } else if (orbitType[0] == 2) { int b = fundRep[2];
+        }
+        else if (orbitType[0] == 2) { //int b = fundRep[2];
             
-            if (orbitType[1] == 1) { //0<a<b //int a = fundRep[1];
-                for (int i = 0; i < 3; i++) {  //{0, a, b} {a, 0, b} {b, 0, a} {b, a, 0} {a, b, 0} {0, b, a}
-                    int[] rep = tau(i, fundRep);
-                    orbit.add(rep);
-                    orbit.add(transposition((i+2)%3, rep));
-                }
-                int[] rotatedFundRep = axialHalfRotation(2, fundRep);
-                for (int i = 0; i < 3; i++) {  //{0, -a, b} {-a, 0, b} {b, 0, -a} {b, -a, 0} {-a, b, 0} {0, b, -a}
-                    int[] rep = tau(i, rotatedFundRep);
-                    orbit.add(rep);
-                    orbit.add(transposition((i+2)%3, rep));
+            if (orbitType[1] == 1 || orbitType[1] == 2) { //0<a<b //int a = fundRep[1];   0 a b; a a b;
+                orbit.add(fundRep);
+                orbit.add(axialQuarterRotation(2, fundRep));
+                orbit.add(axialHalfRotation(2, orbit.get(0)));
+                orbit.add(axialHalfRotation(2, orbit.get(1)));   //{0, a, b} {-a, 0, b} {0, -a, b} {a, 0, b}
+
+                for (int i = 1; i < 3; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        orbit.add(tau(i, orbit.get(j)));
+                    }
                 }
 
-            } else { //if (orbitType[1] == 2 || 3) // a a b //int a = fundRep[1]; //==fundRep[0];
-                for (int i = 0; i < 3; i++) {  //{a, a, b} {b, a, a} {a, b, a}
-                    orbit.add(tau(i, fundRep));
-                }
-                for (int j = 0; j < 3; j++) {  //{-a, a, b} {-a, b, a} {-b, a, a} //{a, -b, a} {b, -a, a} {a, -a, b} //{b, a, -a} {a, a, -b} {a, b, -a}
-                    for (int i = 0; i < 3; i++) {
-                        orbit.add(axialQuarterRotation((j+2)%3, orbit.get(i)));
+            } else {      
+                orbit.add(fundRep); //a b b
+                orbit.add(axialQuarterRotation(0, fundRep));
+                orbit.add(axialHalfRotation(2, orbit.get(0)));
+                orbit.add(axialHalfRotation(2, orbit.get(1)));
+
+                for (int i = 1; i < 3; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        orbit.add(tau(i, orbit.get(j)));
                     }
-                }// || // a b b //{a, b, b} {b, a, b} {b, b, a} //{-b, a, b} {-a, b, b} {-b, b, a} //{a, -b, b} {b, -b, a} {b, -a, b} //{b, b, -a} {b, a, -b} {a, b, -b}
+                }
             } 
                 
-        } else { // get octahedral orbit (24).
+        }
+        else { // get octahedral orbit (24).
 
             for (int i = 0; i < 3; i++) {
                 orbit.add(tau(i, fundRep));
@@ -249,7 +252,37 @@ public class IntegerThreeSpaceUtility {
         }
         return orbit;
     }
-
+    
+    
+    public static List<int[]> getOctahedralOrbit(int[] pt) {
+        int[] orbitType = getCoxeterOrbitClass(pt);
+        if (orbitType[0] != 1) {
+            return getCoxeterOrbit(pt);
+        }
+        return getOctahedralOrbitMultiset(pt);
+    }
+    
+    private static List<int[]> getOctahedralOrbitMultiset(int[] pt) {
+        List<int[]> orbit = new ArrayList<int[]>();
+        for (int i = 0; i < 3; i++) {
+                orbit.add(tau(i, pt));
+            }
+            for (int j = 0; j < 3; j++) {
+                for (int i = 0; i < 3; i++) {
+                    orbit.add(axialQuarterRotation(j, orbit.get(i)));
+                }
+            }
+            for (int j = 0; j < 3; j++) {
+                for (int i = 0; i < 3; i++) {
+                    orbit.add(axialHalfRotation(j, orbit.get(i)));
+                }
+            }
+            for (int i = 0; i < 3; i++) {
+                orbit.add(psi(orbit.get(i)));
+            }
+            return orbit;
+    
+    }
     
     /**
      * Returns the full orbit of the given point under the BC3 reflection group.  

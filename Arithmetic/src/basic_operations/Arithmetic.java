@@ -173,6 +173,51 @@ public class Arithmetic {
     }
     
     /**
+     * For n &#8800; 0, returns the integer representative r, with -|n|/2 &lt; r &le; |n|/2, for the
+     * residue class of m mod n.
+     * 
+     * @param m Any integer.
+     * @param n Any non-zero integer.
+     * @return The integer representative r, with -|n|/2 &lt; r &le; |n|/2, for the residue class of m mod n
+     * @throws ArithmeticException if n is 0
+     */
+    public static int centeredReduction(int m, int n) {
+        if (n==0)
+            throw new ArithmeticException("Division by zero ocurred.");
+        int reduction = reduce(m, n);
+        if (reduction > (n-1)/2) {
+            return reduction-n;
+        }
+        return reduction;
+    }
+    
+    /**
+     * Finds the multiplicative inverse of a mod n; returns 0 if the inverse does not exist.  
+     * Note that a is invertible mod n if and only if gcd(a, n)=1.  
+     * 
+     * @param a Any integer.
+     * @param n Any integer.
+     * @return The integer representative r, with -|n|/2 &lt; r &le; |n|/2, of a^(-1) mod n, if it exists.  Returns 0 if the inverse does not exist, or if n=0.
+     */
+    public static int centeredInverse(int a, int n) {
+        return centeredReduction(findInverse(a, n), n);
+    }
+
+    /**
+     * Returns the representative r, with -|n|/2 &lt; r &le; |n|/2, for the 
+     * reduced product of two <code>int</code> values a and b mod n.
+     * 
+     * @param a any <code>int</code> value
+     * @param b any <code>int</code> value
+     * @param n any non-zero <code>int</code> value
+     * @return the representative r, with -|n|/2 &lt; r &le; |n|/2, for the 
+     * reduced product of two <code>int</code> values a and b mod n.
+     */
+    public static int centeredProduct(int a, int b, int n) {
+        return centeredReduction(reducedProduct(a, b, n), n);
+    }
+    
+    /**
      * Computes the multiplicative order of a mod n; returns 0 if gcd(a,n)>1.  The order of a mod n is by definition the exponent k for which a^k is congruent to 1 mod n.
      * 
      * @param a any integer.
@@ -213,7 +258,7 @@ public class Arithmetic {
     }
 
     /**
-     * Finds the representative r, with 0&lt=r&ltq/2, of the square root of -1 in Z/qZ, 
+     * Finds the representative r, with 0&le;r&lt;q/2, of the square root of -1 in Z/qZ, 
      * where q is a prime number, if it exists; otherwise returns 0.  Note that the square root exists if and only if q is congruent to 1 mod 4.
      */
     public static int findIota(int q) {
@@ -228,7 +273,7 @@ public class Arithmetic {
     }
 
     /**
-     * Finds the representative r, with 0&lt=r&ltq/2, of the square root of a in Z/qZ, 
+     * Finds the representative r, with 0&le;r&lt;q/2, of the square root of a in Z/qZ, 
      * where q is a prime number, if it exists; otherwise returns 0.
      * 
      * @param a any integer
@@ -265,7 +310,7 @@ public class Arithmetic {
     }
     
     /**
-     * Returns the square root of n if n>=0 is a perfect square, and -1 otherwise
+     * Returns the square root of n if n&ge;0 is a perfect square, and -1 otherwise
      */
     public static int perfSqrt(int n) {
         if (n<0 || n==2 || n==3 || n==5)
@@ -340,21 +385,18 @@ public class Arithmetic {
      * 
      * @param n Any integer.
      * @param m Any integer.
-     * @return The greatest common divisor of m and n.  Returns 1 if m=n=0.  
+     * @return The greatest common divisor of m and n.  Returns 0 if m=n=0.  
      */
     public static int gcd(int n, int m) {
         int n0 = Math.abs(n);
         int m0 = Math.abs(m);
 
         if (m0 == 0) {
-            if (n0==0)
-                return 1;
             return n0;
         }
 
         return gcd(m0, reduce(n0, m0));
     }
-    //
 
     /**
      * Computes Jacobi symbol recursively via reciprocity.

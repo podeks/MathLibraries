@@ -249,9 +249,9 @@ public class CayleyGraphBuilder {
         generatorsToTraverse.put(root, new HashSet<G>(degree, 1));
         generatorsToTraverse.get(root).addAll(generatingSet);
 
-        System.out.println("GENERATING CAYLEY GRAPH");
+        System.out.print("GENERATING CAYLEY GRAPH...   ");
 
-        int excess = 0;
+        //int excess = 0;
 
         while (!generatorsToTraverse.isEmpty()) {
             
@@ -299,8 +299,9 @@ public class CayleyGraphBuilder {
             //System.out.println("GENERATORS TO TRAVERSE SIZE: " + generatorsToTraverse.size());
         }
 
-            System.out.println("EXCESS: " + excess);
-            System.out.println("SORTING TARGET LISTS...");
+            System.out.println("DONE");
+            //System.out.println("EXCESS: " + excess);
+            System.out.print("SORTING NEIGHBOR LISTS...    ");
             cayleyGraph.finish();
             System.out.println("DONE");
     }

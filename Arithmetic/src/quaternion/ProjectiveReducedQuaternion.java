@@ -3,6 +3,8 @@ package quaternion;
 import java.util.ArrayList;
 import java.util.List;
 import basic_operations.Arithmetic;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * A class which models the set (or family of sets) of Projective Reduced
@@ -266,62 +268,72 @@ public class ProjectiveReducedQuaternion implements Comparable<ProjectiveReduced
 
         if (fundRep.getEntry(0) == 0) {
             int q = fundRep.getModulus();
+
             if (fundRep.getEntry(3) == 1) {
                 return new ProjectiveReducedQuaternion(fundRep);
-            } else if (fundRep.getEntry(2) == 1) {
+            } else if (fundRep.getEntry(1) == 0) {
                 int b = fundRep.getEntry(3);
-
-                int bInvAbs = Math.abs(centeredInverse(b, q));
-
-                if (bInvAbs > b || fundRep.getEntry(1) == 1) {
+                int bInvAbs = Math.abs(Arithmetic.centeredInverse(b, q));
+                if (bInvAbs > b) {
                     return new ProjectiveReducedQuaternion(fundRep);
-                } else {
-                    return new ProjectiveReducedQuaternion(0, 0, 1, bInvAbs, q);
                 }
-            } else {
-                int a = fundRep.getEntry(2);
+                return new ProjectiveReducedQuaternion(0, 0, 1, bInvAbs, q);
+            } else if (fundRep.getEntry(2) == 1) {
+                
                 int b = fundRep.getEntry(3);
-                int aInv = centeredInverse(a, q);
-                int bInv = centeredInverse(b, q);
-                int aInvB = centeredProduct(aInv, b, q);
-                int aBInv = centeredProduct(a, bInv, q);
-
-                int max1 = Math.max(aInv, aInvB);
-                int max2 = Math.max(bInv, aBInv);
-
-                if (max2 >= b && max1 >= b) {
+                int bInvAbs = Math.abs(Arithmetic.centeredInverse(b, q));
+                if (b < bInvAbs) {
                     return new ProjectiveReducedQuaternion(fundRep);
-                } else if (max2 >= max1) {
-                    if (aInvB >= aInv) {
-                        return new ProjectiveReducedQuaternion(0, 1, aInv, aInvB, q);
-                    }
-                    return new ProjectiveReducedQuaternion(0, 1, aInvB, aInv, q);
                 } else {
-                    if (aBInv >= bInv) {
-                        return new ProjectiveReducedQuaternion(0, 1, bInv, aBInv, q);
-                    }
-                    return new ProjectiveReducedQuaternion(0, 1, aBInv, bInv, q);
-                } // 0 1 a b; 0 1 aInv aInvB; 0 1 bInv aBInv
+                    return new ProjectiveReducedQuaternion(0, 1, bInvAbs, bInvAbs, q);
+                }
+            } else if (fundRep.getEntry(2) == fundRep.getEntry(3)) {
+                int b = fundRep.getEntry(3);
+                int bInvAbs = Math.abs(Arithmetic.centeredInverse(b, q));
+                if (b <= bInvAbs) {
+                      return new ProjectiveReducedQuaternion(fundRep);
+                } else {
+                    return new ProjectiveReducedQuaternion(0, 1, 1, bInvAbs, q);
+                }
             }
+            
+            // 0 1 a b; 0 1 aInv absAInvB; 0 1 bInv absABInv
+            int a = fundRep.getEntry(2); //The previous conditions imply a != 0
+            int b = fundRep.getEntry(3);
+            int aInv = Arithmetic.centeredInverse(a, q);
+            int bInv = Arithmetic.centeredInverse(b, q);
+            int absAInv = Math.abs(aInv);
+            int absBInv = Math.abs(bInv);
+            int absAInvB = Math.abs(Arithmetic.centeredProduct(aInv, b, q));
+            int absABInv = Math.abs(Arithmetic.centeredProduct(a, bInv, q));
+
+            int max1 = Math.max(absAInv, absAInvB);
+            int max2 = Math.max(absBInv, absABInv);
+            int min1 = Math.min(absAInv, absAInvB);
+            int min2 = Math.min(absBInv, absABInv);
+
+            if (max2 > b && max1 > b) {
+                return new ProjectiveReducedQuaternion(fundRep);
+            } else if (max2 > max1) {
+                if (b == max1 && a < min1) {
+                    return new ProjectiveReducedQuaternion(fundRep);
+                }
+                return new ProjectiveReducedQuaternion(0, 1, min1, max1, q);
+            } else if (max1 == max2) {
+                if (b == max2) {
+                    return new ProjectiveReducedQuaternion(0, 1, Math.min(a, Math.min(min1, min2)), b, q);
+                } else if (min1 < min2) {
+                    return new ProjectiveReducedQuaternion(0, 1, min1, max1, q);
+                }
+                return new ProjectiveReducedQuaternion(0, 1, min2, max2, q);
+            } else if (b == max2 && a < min2) {
+                return new ProjectiveReducedQuaternion(fundRep);
+            }
+            return new ProjectiveReducedQuaternion(0, 1, min2, max2, q);
         }
-        return new ProjectiveReducedQuaternion(fundRep);
+        return new ProjectiveReducedQuaternion(fundRep); //when fundRep.getEntry(0) != 0
     }
 
-    private static int centeredInverse(int a, int q) {
-        int inv = Arithmetic.findInverse(a, q);
-        if (inv > (q - 1) / 2) {
-            inv = inv - q;
-        }
-        return inv;
-    }
-
-    private static int centeredProduct(int a, int b, int q) {
-        int product = Arithmetic.reducedProduct(a, b, q);
-        if (product > (q - 1) / 2) {
-            product = product - q;
-        }
-        return product;
-    }
 
     /**
      * Returns the orbit of this element under the action of the BC3 reflection
@@ -355,6 +367,17 @@ public class ProjectiveReducedQuaternion implements Comparable<ProjectiveReduced
             imaginaryCoxeterOrbit = IntegerThreeSpaceUtility.getCoxeterOrbit(new int[]{fundRep.getEntry(1), fundRep.getEntry(2), fundRep.getEntry(3)});
         }
         for (int[] image : imaginaryCoxeterOrbit) {
+            orbit.add(new ProjectiveReducedQuaternion(getEntry(0), image[0], image[1], image[2], getModulus()));
+        }
+        return orbit;
+    }
+    
+    public Set<ProjectiveReducedQuaternion> getOctahedralOrbit() {
+        Set<ProjectiveReducedQuaternion> orbit = new LinkedHashSet<ProjectiveReducedQuaternion>();
+
+        List<int[]> imaginaryOctahedralOrbit = IntegerThreeSpaceUtility.getOctahedralOrbit(new int[]{getEntry(1), getEntry(2), getEntry(3)});
+        
+        for (int[] image : imaginaryOctahedralOrbit) {
             orbit.add(new ProjectiveReducedQuaternion(getEntry(0), image[0], image[1], image[2], getModulus()));
         }
         return orbit;

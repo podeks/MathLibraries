@@ -46,7 +46,7 @@ import api.IndexedNavigableRootedNeighborGraph;
  * 
  * @author pdokos
  */
-public class ExpansionAnalyzer<S> {
+public class ShellExpansionAnalyzer<S> {
 
     private IndexedNavigableRootedNeighborGraph<S> graph;
      
@@ -61,12 +61,12 @@ public class ExpansionAnalyzer<S> {
     private List<Integer> t_n;
 
     /**
-     * Instantiates a new ExpansionAnalyzer on the given IndexedNavigableRootedNeighborGraph.
+     * Instantiates a new ShellExpansionAnalyzer on the given IndexedNavigableRootedNeighborGraph.
      * The graph assigned to the analyzer through this constructor cannot be changed.
      * 
      * @param graph The graph assigned to this analyzer.
      */
-    public ExpansionAnalyzer(IndexedNavigableRootedNeighborGraph<S> graph) {
+    public ShellExpansionAnalyzer(IndexedNavigableRootedNeighborGraph<S> graph) {
         this.graph = graph;
     }
 
@@ -97,7 +97,7 @@ public class ExpansionAnalyzer<S> {
      */
     public void generateData() {
         
-        System.out.println("GENERATING EXPANSION DATA... ");
+        //System.out.print("GENERATING SHELL DATA...     ");
         
         numVerts = graph.getNumberOfVertices();
         numEdges = graph.getNumberOfEdges()/2;
@@ -137,8 +137,26 @@ public class ExpansionAnalyzer<S> {
             }
             
         }
-        System.out.println("DONE");
+        //System.out.println("DONE");
 
+    }
+    
+    /**
+     * Returns true if the graph is bipartite.
+     * 
+     * @return true if the graph is bipartite.
+     */
+    public boolean isBipartite() {
+        return bipartite;
+    }
+    
+    /**
+     * Returns the girth of the graph.
+     * 
+     * @return the girth of the graph.
+     */
+    public int getGirth() {
+        return girth;
     }
     
     /**
@@ -295,7 +313,7 @@ public class ExpansionAnalyzer<S> {
         try {
             fw = new FileWriter(f);
         } catch (IOException ex) {
-            Logger.getLogger(ExpansionAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShellExpansionAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         
@@ -313,7 +331,7 @@ public class ExpansionAnalyzer<S> {
         try {
             fw.write(line.toString());
         } catch (IOException ex) {
-            Logger.getLogger(ExpansionAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShellExpansionAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         
@@ -341,7 +359,7 @@ public class ExpansionAnalyzer<S> {
         try {
             fw = new FileWriter(f);
         } catch (IOException ex) {
-            Logger.getLogger(ExpansionAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShellExpansionAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         

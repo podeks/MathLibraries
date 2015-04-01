@@ -197,7 +197,7 @@ public class LPSConstructionUtility {
      * over the entries (or the key-set) of the Map through its Iterator 
      * traverses the orbits consecutively in the lexicographical order on the
      * fundamental representatives.  The ordering on the individual orbits is
-     * defined by the method ProjectiveReducedQuaternion.getProjectiveCoxeterOrbit. 
+     * defined by the method ProjectiveReducedQuaternion.getCoxeterOrbit. 
      * 
      * @param p an odd <code>int</code> prime
      * @param q an odd <code>int</code> prime different from p.
