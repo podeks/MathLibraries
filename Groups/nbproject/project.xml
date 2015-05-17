@@ -17,6 +17,7 @@
             </module-dependencies>
             <public-packages>
                 <package>api</package>
+                <package>fastgroups</package>
                 <package>groups</package>
                 <package>utilities</package>
             </public-packages>

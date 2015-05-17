@@ -8,6 +8,7 @@
             <module-dependencies/>
             <public-packages>
                 <package>basic_operations</package>
+                <package>finitefields</package>
                 <package>lps</package>
                 <package>quaternion</package>
             </public-packages>
