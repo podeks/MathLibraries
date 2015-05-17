@@ -738,7 +738,7 @@ public class GeneratingSetCatalog {
         
         if (n>1) {
             
-            if (name.equals("S_n Pair-1") || name.equals("S_n Pair-2")) {
+            if (name.equals("S_n - Pair 1") || name.equals("S_n - Pair 2")) {
                 int[] perm = new int[n];
                 perm[0]=1;
                 perm[1]=0;
@@ -750,7 +750,7 @@ public class GeneratingSetCatalog {
                 genSet.add(elt.getInverse());
                 
                 
-                if (name.equals("S_n Pair-1")) {
+                if (name.equals("S_n - Pair 1")) {
                     perm[0] = 1;
                     perm[n-1] = 0;
                 } else {
@@ -766,12 +766,12 @@ public class GeneratingSetCatalog {
                 genSet.add(elt);
                 genSet.add(elt.getInverse());
             } 
-            else if (name.equals("S_n Transp-1") || name.equals("S_n Transp-2")) {
+            else if (name.equals("S_n - Transp 1") || name.equals("S_n - Transp 2")) {
                 int[] perm = new int[n];
                 
                 for (int k = 1; k < n; k++) {
                     
-                    if (name.equals("S_n Transp-1")) {
+                    if (name.equals("S_n - Transp 1")) {
                         perm[0] = k;
                         perm[k] = 0;
                         for (int i = 1; i < n; i++) {
@@ -779,7 +779,7 @@ public class GeneratingSetCatalog {
                                 perm[i] = i;
                             }
                         }
-                    } else if (name.equals("S_n Transp-2")){
+                    } else if (name.equals("S_n - Transp 2")){
                         perm[k - 1] = k;
                         perm[k] = k - 1;
                         for (int i = 0; i < n; i++) {
@@ -837,7 +837,7 @@ public class GeneratingSetCatalog {
         
         if (n>2) {
             
-            if (name.equals("A_n Pair")) {
+            if (name.equals("A_n - Pair")) {
                 int[] perm = new int[n];
                 perm[0]=1;
                 perm[1]=2;
@@ -866,12 +866,12 @@ public class GeneratingSetCatalog {
                 genSet.add(elt);
                 genSet.add(elt.getInverse());
             } 
-            else if (name.equals("A_n 3Cycle-1") || name.equals("A_n 3Cycle-2")) {
+            else if (name.equals("A_n - 3Cycle 1") || name.equals("A_n - 3Cycle 2")) {
                 int[] perm = new int[n];
                 
                 for (int k = 2; k < n; k++) {
                     
-                    if (name.equals("A_n 3Cycle-1")) {
+                    if (name.equals("A_n - 3Cycle 1")) {
                         perm[0] = 1;
                         perm[1] = k;
                         perm[k] = 0;
@@ -880,7 +880,7 @@ public class GeneratingSetCatalog {
                                 perm[i] = i;
                             }
                         }
-                    } else if (name.equals("A_n 3Cycle-2")){
+                    } else if (name.equals("A_n - 3Cycle 2")){
                         perm[k - 2] = k-1;
                         perm[k - 1] = k;
                         perm[k] = k - 2;
@@ -945,7 +945,7 @@ public class GeneratingSetCatalog {
 
         Set<SymmetricGroup> genSet = new HashSet<SymmetricGroup>();
 
-        if (name.equals("M11-Pair 1")) { //From Wikipedia <(1, 2, ..., 11), (3, 7, 11, 8)(4, 10, 5, 6)>
+        if (name.equals("M11 - Pair 1")) { //From Wikipedia <(1, 2, ..., 11), (3, 7, 11, 8)(4, 10, 5, 6)>
             
             SymmetricGroup elt = SymmetricGroup.createCycle(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 11);
             genSet.add(elt);
@@ -956,7 +956,7 @@ public class GeneratingSetCatalog {
             genSet.add(elt);
             genSet.add(elt.getInverse());
             
-        } else if (name.equals("M11-Pair 2")) { //From Atlas <(2, 10)(4, 11)(5, 7)(8, 9), (1, 4, 3, 8)(2, 5, 6, 9)>
+        } else if (name.equals("M11 - Pair 2")) { //From Atlas <(2, 10)(4, 11)(5, 7)(8, 9), (1, 4, 3, 8)(2, 5, 6, 9)>
             
             SymmetricGroup elt = new SymmetricGroup(new int[]{0, 9, 2, 10, 6, 5, 4, 8, 7, 1, 3});
             genSet.add(elt);
@@ -965,7 +965,7 @@ public class GeneratingSetCatalog {
             elt = SymmetricGroup.cycleDec2Perm(cycles, 11);
             genSet.add(elt);
             genSet.add(elt.getInverse());
-        } else if (name.equals("M11-5Tuple")) { //From Taslaman <x1, x2, x3, x4, x5>,    with    x1 = (1 2)(3 4)(5 6)(7 8)
+        } else if (name.equals("M11 - 5Tuple")) { //From Taslaman <x1, x2, x3, x4, x5>,    with    x1 = (1 2)(3 4)(5 6)(7 8)
             //x2 = (1 2)(5 7)(6 8)(9 10)  x3 = (1 3)(2 4)(5 6)(9 10) x4 = (1 3)(5 9)(6 10)(7 8)  x5 = (1 6)(2 5)(7 8)(9 11)
             
             SymmetricGroup elt;
@@ -984,7 +984,7 @@ public class GeneratingSetCatalog {
             elt = new SymmetricGroup(new int[]{5, 4, 2, 3, 1, 0, 7, 6, 10, 9, 8});
             genSet.add(elt);
             genSet.add(elt.getInverse());
-        } else if (name.equals("M12-Pair")) { //From Atlas 
+        } else if (name.equals("M12 - Pair")) { //From Atlas 
             
             SymmetricGroup elt = new SymmetricGroup(new int[]{3, 1, 9, 0, 10, 11, 6, 7, 8, 2, 4, 5});
             genSet.add(elt);
@@ -996,7 +996,7 @@ public class GeneratingSetCatalog {
             genSet.add(elt);
             genSet.add(elt.getInverse());
             
-        } else if (name.equals("M12-Pair 2")) { //From Atlas
+        } else if (name.equals("M12 - Pair 2")) { //From Atlas
             
             SymmetricGroup elt = new SymmetricGroup(new int[]{0, 2, 1, 3, 5, 4, 6, 8, 7, 9, 11, 10});
             genSet.add(elt);
@@ -1008,7 +1008,7 @@ public class GeneratingSetCatalog {
             genSet.add(elt);
             genSet.add(elt.getInverse());
             
-        } else if (name.equals("M12-Triplet")) { //From Wikipedia <PSL2(F11), (2, 10)(3, 4)(5, 9)(6, 7)>
+        } else if (name.equals("M12 - Triplet")) { //From Wikipedia <PSL2(F11), (2, 10)(3, 4)(5, 9)(6, 7)>
 
             Set<GL2_PrimeField> pairGL2gens = getSL2GenSet("Pair", (short) 11);
 
@@ -1019,14 +1019,14 @@ public class GeneratingSetCatalog {
             SymmetricGroup elt = new SymmetricGroup(new int[]{0, 9, 3, 2, 8, 6, 5, 7, 4, 1, 10, 11});
             genSet.add(elt);
             genSet.add(elt.getInverse());
-        } else if (name.equals("M22-Pair")) { //From Atlas
+        } else if (name.equals("M22 - Pair")) { //From Atlas
             SymmetricGroup elt = new SymmetricGroup(new int[]{12, 7, 15, 11, 4, 21, 16, 1, 9, 8, 13, 3, 0, 10, 14, 2, 6, 17, 18, 19, 20, 5});
             genSet.add(elt);
             genSet.add(elt.getInverse());
             elt = new SymmetricGroup(new int[]{21, 17, 20, 12, 11, 10, 14, 13, 8, 7, 6, 4, 1, 19, 5, 15, 18, 3, 16, 9, 0, 2});
             genSet.add(elt);
             genSet.add(elt.getInverse());
-        } else if (name.equals("J2-Pair")) { //From Atlas
+        } else if (name.equals("J2 - Pair")) { //From Atlas
             
             int[][] cycles1 = {{0, 83}, {1, 19}, {2, 47}, {3, 55}, {4, 81}, 
                 {5, 66}, {6, 54}, {7, 40}, {8, 34}, {9, 39}, {10, 77}, {11, 99},
@@ -1090,7 +1090,7 @@ public class GeneratingSetCatalog {
     public static Set<GLn_PrimeField> getJanko1GenSet(String name) {
         Set<GLn_PrimeField> genSet = new HashSet<GLn_PrimeField>();
         GLn_PrimeField elt;
-        if (name.equals("J1-Pair 1")) { //From Wikipedia
+        if (name.equals("J1 - Pair 1")) { //From Wikipedia
             int[][] rep = new int[7][7];
             rep[0] = new int[]{0, 1, 0, 0, 0, 0, 0};
             rep[1] = new int[]{0, 0, 1, 0, 0, 0, 0};
@@ -1112,29 +1112,30 @@ public class GeneratingSetCatalog {
             elt = new GLn_PrimeField(rep, (short) 11);
             genSet.add(elt);
             genSet.add(elt.getInverse());
-        } else if (name.equals("J1-Pair 2")) { //From Atlas
-            int[][] rep = new int[7][7];
-            rep[0] = new int[]{0,9,10,10,5,9,10};
-            rep[1] = new int[]{9,0,6,2,7,7,2};
-            rep[2] = new int[]{10,6,1,4,7,3,1};
-            rep[3] = new int[]{10,2,4,5,6,3,0};
-            rep[4] = new int[]{5,7,7,6,4,10,6};
-            rep[5] = new int[]{9,7,3,3,10,6,7};
-            rep[6] = new int[]{10,2,1,0,6,7,0};
-            elt = new GLn_PrimeField(rep, (short) 11);
-            genSet.add(elt);
-            genSet.add(elt.getInverse());
-            rep[0] = new int[]{8,9,6,4,8,4,1};
-            rep[1] = new int[]{5,2,5,0,7,7,4};
-            rep[2] = new int[]{8,5,4,10,6,1,6};
-            rep[3] = new int[]{1,7,7,3,6,1,10};
-            rep[4] = new int[]{9,2,9,1,5,9,7};
-            rep[5] = new int[]{7,10,0,2,1,7,8};
-            rep[6] = new int[]{7,2,7,7,10,2,10};
-            elt = new GLn_PrimeField(rep, (short) 11);
-            genSet.add(elt);
-            genSet.add(elt.getInverse());
-        }
+        } 
+//        else if (name.equals("J1-Pair 2")) { //From Atlas
+//            int[][] rep = new int[7][7];
+//            rep[0] = new int[]{0,9,10,10,5,9,10};
+//            rep[1] = new int[]{9,0,6,2,7,7,2};
+//            rep[2] = new int[]{10,6,1,4,7,3,1};
+//            rep[3] = new int[]{10,2,4,5,6,3,0};
+//            rep[4] = new int[]{5,7,7,6,4,10,6};
+//            rep[5] = new int[]{9,7,3,3,10,6,7};
+//            rep[6] = new int[]{10,2,1,0,6,7,0};
+//            elt = new GLn_PrimeField(rep, (short) 11);
+//            genSet.add(elt);
+//            genSet.add(elt.getInverse());
+//            rep[0] = new int[]{8,9,6,4,8,4,1};
+//            rep[1] = new int[]{5,2,5,0,7,7,4};
+//            rep[2] = new int[]{8,5,4,10,6,1,6};
+//            rep[3] = new int[]{1,7,7,3,6,1,10};
+//            rep[4] = new int[]{9,2,9,1,5,9,7};
+//            rep[5] = new int[]{7,10,0,2,1,7,8};
+//            rep[6] = new int[]{7,2,7,7,10,2,10};
+//            elt = new GLn_PrimeField(rep, (short) 11);
+//            genSet.add(elt);
+//            genSet.add(elt.getInverse());
+//        }
         
         return genSet;
     }

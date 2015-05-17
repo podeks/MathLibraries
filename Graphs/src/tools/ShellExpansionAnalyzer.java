@@ -48,17 +48,18 @@ import api.IndexedNavigableRootedNeighborGraph;
  */
 public class ShellExpansionAnalyzer<S> {
 
-    private IndexedNavigableRootedNeighborGraph<S> graph;
+    protected IndexedNavigableRootedNeighborGraph<S> graph;
      
-    private int numVerts;
-    private int numEdges;
-    private int diameter;
-    private int girth;
-    private boolean bipartite;
+    protected int numVerts;
+    protected int numEdges;
+    protected int diameter;
+    protected double avgDist;
+    protected int girth;
+    protected boolean bipartite;
     
-    private List<Integer> s_n;
-    private List<Integer> e_n;
-    private List<Integer> t_n;
+    protected List<Integer> s_n;
+    protected List<Integer> e_n;
+    protected List<Integer> t_n;
 
     /**
      * Instantiates a new ShellExpansionAnalyzer on the given IndexedNavigableRootedNeighborGraph.
@@ -110,6 +111,7 @@ public class ShellExpansionAnalyzer<S> {
         girth=0;
         bipartite=true;
         diameter=graph.getMaxDistanceFromRoot();
+        int sum=0;
         
         for (int i=0; i<=diameter; i++) {
             List<S> currentShell = graph.getShell(i);
@@ -122,6 +124,7 @@ public class ShellExpansionAnalyzer<S> {
                 numTangEdges += graph.getNeighborsInSameShell(s).size();
             }
             
+            sum += currentShell.size();
             s_n.add(currentShell.size());
             e_n.add(numOutEdges);
             t_n.add(numTangEdges/2);
@@ -137,6 +140,8 @@ public class ShellExpansionAnalyzer<S> {
             }
             
         }
+        
+        avgDist = sum/numVerts;
         //System.out.println("DONE");
 
     }
@@ -169,7 +174,7 @@ public class ShellExpansionAnalyzer<S> {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-            "Vertices", "Edges", "Bipartite", "Diameter", "Girth"
+            "Vertices", "Edges", "Bipartite", "Avg Dist", "Diameter", "Girth"
         });
         return model;
     }
@@ -224,7 +229,7 @@ public class ShellExpansionAnalyzer<S> {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-            "Vertices", "Edges", "Bipartite", "Diameter", "Girth"
+            "Vertices", "Edges", "Bipartite", "Avg Dist", "Diameter", "Girth"
         });
                
 
@@ -235,7 +240,8 @@ public class ShellExpansionAnalyzer<S> {
             bip="No";
         }
 
-        model.addRow(new Object[]{NumberFormat.getIntegerInstance().format(numVerts), NumberFormat.getIntegerInstance().format(numEdges), bip, diameter, girth});
+        DecimalFormat formatter = new DecimalFormat("#.##");
+        model.addRow(new Object[]{NumberFormat.getIntegerInstance().format(numVerts), NumberFormat.getIntegerInstance().format(numEdges), bip, formatter.format(avgDist), diameter, girth});
         return model;
     }
 

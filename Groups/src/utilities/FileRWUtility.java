@@ -436,7 +436,7 @@ public class FileRWUtility {
      * @throws FileNotFoundException
      * @throws IOException 
      */
-    public static short[][] readFileToArray(File file) throws FileNotFoundException, IOException {
+    public static short[][] readFileToArrayOld(File file) throws FileNotFoundException, IOException {
         List<short[]> list = readGroupFileToListOfArrays(file);
         int size = list.size();
         int dim = list.get(0).length;
@@ -448,13 +448,59 @@ public class FileRWUtility {
         return arr;
     }
     
+    public static short[][] readFileToArray(File file) throws FileNotFoundException, IOException {
+        FileReader fr;
+        fr = new FileReader(file);
+        BufferedReader in = new BufferedReader(fr);
+        String s = in.readLine();
+        Scanner scanner = new Scanner(s);
+        System.out.println(scanner.next());
+        int size = scanner.nextInt();
+        scanner.close();
+        
+        String firstElt = in.readLine();
+        List<Short> entriesList = new ArrayList<Short>();
+        for (String t : firstElt.split(" ")) {
+            entriesList.add(Short.valueOf(t));//Short.parseShort(t));
+        }
+        int eltSize=entriesList.size();
+        
+        short[][] list = new short[size][eltSize];
+        int i=0;
+        for (int j=0; j<eltSize; j++) {
+            list[i][j]=entriesList.get(j);
+        }
+
+        long startTime = System.nanoTime();
+
+        if (s.startsWith("GL2") || s.startsWith("PGL2") || s.startsWith("GLn") || s.startsWith("PGLn") || s.startsWith("Sn")) {
+            s = in.readLine();
+            while (!(s == null)) {
+                int j=0;
+                i++;
+                for (String t: s.split(" ")) {
+                    list[i][j] = Short.valueOf(t);
+                    j++;
+                }
+                s = in.readLine();
+            }
+        }
+        in.close();
+        fr.close();
+        System.out.println(list.length);
+        long endTime = System.nanoTime();
+
+        System.out.println((endTime - startTime)/1000000);  
+        return list;
+    }
+    
     private static List<short[]> readGroupFileToListOfArrays(File file) throws FileNotFoundException, IOException {
         List<short[]> list = new ArrayList<short[]>();
         FileReader fr;
         fr = new FileReader(file);
         BufferedReader in = new BufferedReader(fr);
         String s = in.readLine();
-        if (s.equals("GL2") || s.equals("PGL2") || s.equals("GLn") || s.equals("PGLn") || s.equals("Sn")) {
+        if (s.startsWith("GL2") || s.startsWith("PGL2") || s.startsWith("GLn") || s.startsWith("PGLn") || s.startsWith("Sn")) {
             s = in.readLine();
             while (!(s == null)) {
                 Scanner scanner = new Scanner(s);

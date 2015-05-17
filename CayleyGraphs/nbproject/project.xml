@@ -25,6 +25,7 @@
             </module-dependencies>
             <public-packages>
                 <package>cayleygraphs</package>
+                <package>colorgrouph</package>
             </public-packages>
         </data>
     </configuration>

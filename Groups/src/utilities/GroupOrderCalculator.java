@@ -243,7 +243,7 @@ public class GroupOrderCalculator {
      * value of 0 if the actual order exceeds <code>Long.MAX_VALUE</code>.
      */
     public static long getOrderPSp_2m(int m, int q) {
-        if (q != 2) {
+        if ((q % 2) != 0) {
             return getOrderSp_2m(m, q) / 2;
         } else {
             return getOrderSp_2m(m, q);
