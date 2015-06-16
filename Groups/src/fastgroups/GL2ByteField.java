@@ -3,6 +3,8 @@ package fastgroups;
 
 import api.Group;
 import finitefields.ByteField;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -22,7 +24,7 @@ public class GL2ByteField implements Group<GL2ByteField>{
     private byte c;
     private byte d;
     
-    private byte q;
+    private short q;
     private ByteField f;
 
     /**
@@ -44,7 +46,7 @@ public class GL2ByteField implements Group<GL2ByteField>{
      */
     public GL2ByteField(byte a, byte b, byte c, byte d, ByteField f) {
         this.f = f;
-        q= (byte) f.getOrder();
+        q= (short) f.getOrder();
         this.a = a;
         this.b = b;
         this.c = c;
@@ -71,7 +73,7 @@ public class GL2ByteField implements Group<GL2ByteField>{
      */
     public GL2ByteField(ByteField.Element a, ByteField.Element b, ByteField.Element c, ByteField.Element d, ByteField f) {
         this.f = f;
-        q= (byte) f.getOrder();
+        q= (short) f.getOrder();
         this.a = a.getIndex();
         this.b = b.getIndex();
         this.c = c.getIndex();
@@ -103,7 +105,15 @@ public class GL2ByteField implements Group<GL2ByteField>{
     
     public static GL2ByteField convert(GLnByteField g) {
         return new GL2ByteField(g.getEntry(0, 0), g.getEntry(0, 1), g.getEntry(1, 0), g.getEntry(1, 1), g.getField() );
-    }  
+    }
+    
+    public static Set<GL2ByteField> convert(Set<GLnByteField> set) {
+        Set<GL2ByteField> newSet = new HashSet<GL2ByteField>(set.size()+1, 1.0f);
+        for (GLnByteField g : set) {
+            newSet.add(convert(g));
+        }
+        return newSet;
+    }
 
 
     /**
@@ -119,11 +129,11 @@ public class GL2ByteField implements Group<GL2ByteField>{
     @Override
     public boolean equals(Object h) {
         if (h instanceof GL2ByteField) {
-            return (a==((GL2ByteField) h).getA() &&
-                    b==((GL2ByteField) h).getB() &&
-                    c==((GL2ByteField) h).getC() &&
-                    d==((GL2ByteField) h).getD() &&
-                    q==((GL2ByteField) h).getFieldOrder());
+            return (a==((GL2ByteField) h).a &&
+                    b==((GL2ByteField) h).b &&
+                    c==((GL2ByteField) h).c &&
+                    d==((GL2ByteField) h).d &&
+                    q==((GL2ByteField) h).q);
         }
         return false;
     }
@@ -148,7 +158,7 @@ public class GL2ByteField implements Group<GL2ByteField>{
     public ByteField getField() {
         return f;
     }
-    
+        
     public void project() {
         byte factor;
         if (a==f.zero().getIndex()) {
@@ -171,8 +181,8 @@ public class GL2ByteField implements Group<GL2ByteField>{
      * 
      * @return The order of the base field.
      */
-    public byte getFieldOrder(){
-        return q;
+    public int getFieldOrder(){
+        return f.getOrder();
     }
 
     /**
@@ -233,7 +243,7 @@ public class GL2ByteField implements Group<GL2ByteField>{
      */
     @Override
     public GL2ByteField leftProductBy(GL2ByteField h) {
-        if (h.getFieldOrder()== q) {
+        if (h.q== q) {
         return new GL2ByteField(f.add(f.mult(h.getA(), a), f.mult(h.getB(), c)), 
                                   f.add(f.mult(h.getA(), b), f.mult(h.getB(), d)),
                                   f.add(f.mult(h.getC(), a), f.mult(h.getD(), c)), 
@@ -247,7 +257,7 @@ public class GL2ByteField implements Group<GL2ByteField>{
      */
     @Override
     public GL2ByteField rightProductBy(GL2ByteField h) {
-        if (h.getFieldOrder()== q) {
+        if (h.q== q) {
         return new GL2ByteField(f.add(f.mult(a, h.getA()), f.mult(b, h.getC())), 
                                   f.add(f.mult(a, h.getB()), f.mult(b, h.getD())),
                                   f.add(f.mult(c, h.getA()), f.mult(d, h.getC())), 
@@ -277,7 +287,7 @@ public class GL2ByteField implements Group<GL2ByteField>{
      */
     @Override
     public boolean isOperationalWith(GL2ByteField h) {
-        return q==h.getFieldOrder();
+        return q==h.q;
     }
 
     /**

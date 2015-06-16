@@ -2,6 +2,8 @@ package fastgroups;
 
 import api.Group;
 import finitefields.ByteField;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -14,14 +16,14 @@ public class GL3ByteField implements Group<GL3ByteField>{
     private byte a31, a32, a33;
 
     
-    private byte q;
+    private short q;
     private ByteField f;
 
     public GL3ByteField(byte a11,byte a12,byte a13,
             byte a21,byte a22,byte a23,
             byte a31,byte a32,byte a33, ByteField f) {
         this.f = f;
-        q= (byte) f.getOrder();
+        q= (short) f.getOrder();
         this.a11 = a11;
         this.a12 = a12;
         this.a13 = a13;
@@ -73,6 +75,14 @@ public class GL3ByteField implements Group<GL3ByteField>{
                 g.getEntry(2, 0), g.getEntry(2, 1), g.getEntry(2, 2),
                 g.getField() );
     }
+    
+    public static Set<GL3ByteField> convert(Set<GLnByteField> set) {
+        Set<GL3ByteField> newSet = new HashSet<GL3ByteField>(set.size()+1, 1.0f);
+        for (GLnByteField g : set) {
+            newSet.add(convert(g));
+        }
+        return newSet;
+    }
 
     /**
      * An override of the <code>equals</code> method so as to return
@@ -96,7 +106,7 @@ public class GL3ByteField implements Group<GL3ByteField>{
                     a31==((GL3ByteField) h).a31 &&
                     a32==((GL3ByteField) h).a32 &&
                     a33==((GL3ByteField) h).a33 &&
-                    q==((GL3ByteField) h).getFieldOrder());
+                    q==((GL3ByteField) h).q);
         }
         return false;
     }
@@ -147,8 +157,12 @@ public class GL3ByteField implements Group<GL3ByteField>{
     }
     
     
-    public byte getFieldOrder(){
-        return q;
+    public ByteField getField() {
+        return f;
+    }
+    
+    public int getFieldOrder(){
+        return f.getOrder();
     }
 
 
@@ -183,7 +197,7 @@ public class GL3ByteField implements Group<GL3ByteField>{
      */
     @Override
     public GL3ByteField rightProductBy(GL3ByteField h) {
-        if (h.getFieldOrder() == q) {
+        if (h.q == q) {
             return new GL3ByteField(f.add(f.add(f.mult(a11, h.a11), f.mult(a12, h.a21)), f.mult(a13, h.a31)),
                     f.add(f.add(f.mult(a11, h.a12), f.mult(a12, h.a22)), f.mult(a13, h.a32)),
                     f.add(f.add(f.mult(a11, h.a13), f.mult(a12, h.a23)), f.mult(a13, h.a33)),
@@ -224,7 +238,7 @@ public class GL3ByteField implements Group<GL3ByteField>{
      */
     @Override
     public boolean isOperationalWith(GL3ByteField h) {
-        return q==h.getFieldOrder();
+        return q==h.q;
     }
 
     /**
@@ -248,15 +262,15 @@ public class GL3ByteField implements Group<GL3ByteField>{
     
     /**
      * Returns a representation of the element making the call as a String
-     * consisting of the four entries of the matrix, followed by the field order,
+     * consisting of the byte entries of the matrix, followed by the field order,
      * all separated by single spaces.
      * 
      * @return A String representation of the element making the call
      * consisting of the four entries of the matrix, followed by the field order,
      * all separated by single spaces.
      */
-//    public String toUnpunctuatedString() {
-//        return Short.toString(a)+" "+Short.toString(b)+" "+Short.toString(c)+" "+Short.toString(d)+" "+Short.toString(q);
-//    }
+    public String toUnpunctuatedString() {
+        return a11+" "+a12+" "+a13+" "+a21+" "+a22+" "+a23+" "+a31+" "+a32+" "+a33+" "+q;
+    }
 
 }

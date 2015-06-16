@@ -135,7 +135,7 @@ public class GenSetCatalog {
             ByteField.Element[][] rep2 = new ByteField.Element[n][n];
 
             if (f.getCharacteristic() == 2 && f.getDimension() == 1) {
-                return null;//getSLnGeneratingSet(n, f);
+                return getSLnGeneratingSet(n, f);
             }
 
             for (int i = 0; i < n; i++) {

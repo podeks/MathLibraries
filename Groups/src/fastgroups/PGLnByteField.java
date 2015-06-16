@@ -16,6 +16,11 @@ public class PGLnByteField implements Group<PGLnByteField>{
         g.project();
     }
     
+    public PGLnByteField(ByteField field, byte[][] ents) {
+        g=new GLnByteField(field, ents);
+        g.project();
+    }
+    
     public PGLnByteField(ByteField f, int n) {
         g=new GLnByteField(f, n); //g.project();
     }
@@ -25,6 +30,17 @@ public class PGLnByteField implements Group<PGLnByteField>{
         g.project();
     }
     
+    /**
+     * A static helper for producing the identity element of GLnByteField 
+     * over the field f.
+     * 
+     * @param n the dimension.
+     * @param f a <code>ByteField</code>.
+     * @return The identity element of GLnByteField.
+     */
+    public static PGLnByteField constructIdentity(int n, ByteField f) {
+        return new PGLnByteField(f, n);
+    }
     
     @Override
     public boolean equals(Object o) {
@@ -44,8 +60,20 @@ public class PGLnByteField implements Group<PGLnByteField>{
         return g.toString();
     }
     
+    public String toUnpunctuatedString() {
+        return g.toUnpunctuatedString();
+    }
+    
     public ByteField getField() {
         return g.getField();
+    }
+    
+    public int getFieldOrder() {
+        return g.getFieldOrder();
+    }
+    
+    public int getDimension() {
+        return g.getDimension();
     }
     
     public ByteField.Element getEntry(int i, int j) {

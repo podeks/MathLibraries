@@ -727,7 +727,7 @@ public class GeneratingSetCatalog {
      * link</a> </br>
      * </p> 
      * 
-     * @param name One of the following Strings: "S_n Pair-1", "S_n Pair-2", 
+     * @param name One of the following Strings: "S_n - Pair 1", "S_n - Pair 2", 
      * "S_n Transp-1", or "S_n Transp-2".
      * @param n A positive <code>int</code> value for number of letters.
      * @return A generating set for the Symmetric Group on n letters, as a Set&ltSymmetricGroup&gt.

@@ -74,6 +74,18 @@ public class GLnByteField implements Group<GLnByteField>{
 //        return null;
 //    }
     
+    /**
+     * A static helper for producing the identity element of GLnByteField 
+     * over the field f.
+     * 
+     * @param n the dimension.
+     * @param f a <code>ByteField</code>.
+     * @return The identity element of GLnByteField.
+     */
+    public static GLnByteField constructIdentity(int n, ByteField f) {
+        return new GLnByteField(f, n);
+    }
+    
     private void scale(byte lambda) {
         for (int i=0; i<entries.length; i++) {
             entries[i]=f.mult(lambda, entries[i]);
@@ -93,6 +105,10 @@ public class GLnByteField implements Group<GLnByteField>{
         if (firstNonzeroEntry != zero) {
             scale(f.inverse(firstNonzeroEntry));
         } 
+    }
+    
+    public int getFieldOrder(){
+        return f.getOrder();
     }
     
     public ByteField getField() {
@@ -274,7 +290,30 @@ public class GLnByteField implements Group<GLnByteField>{
         return sb.toString();
     }
         
-        
+          /**
+     * Returns a representation of the element making the call as a String
+     * consisting of n^2 + 1 integers separated by single spaces. The first n^2
+     * integers of the list are the entries of the reduced matrix representative, 
+     * listed by concatenating the rows of the matrix from top to bottom.  
+     * The last entry is the order of the base field.
+     * 
+     * @return A String representation of the element making the call
+     * consisting of n^2 + 1 integers separated by single spaces.
+     */
+    public String toUnpunctuatedString() {
+        StringBuilder sb = new StringBuilder();
+        int dimension = getDimension();
+        int ind=0;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                sb.append(entries[ind]).append(' ');
+                ind++;
+                //if (!((j == dimension-1) && (i == dimension-1))) sb.append(" ")
+            }
+        }
+        sb.append(f.getOrder());
+        return sb.toString();
+    }  
         
         
         

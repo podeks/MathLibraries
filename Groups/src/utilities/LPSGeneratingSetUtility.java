@@ -1,5 +1,7 @@
 package utilities;
 
+import fastgroups.PGL2ByteField;
+import finitefields.ByteField;
 import java.util.ArrayList;
 import java.util.List;
 import lps.LPSConstructionUtility;
@@ -64,6 +66,32 @@ public class LPSGeneratingSetUtility {
         List<PGL2_PrimeField> generatingSet = new ArrayList<PGL2_PrimeField>(generatorReps.size());
         for (int[][] mtxGenerator : generatorReps) {
             generatingSet.add(new PGL2_PrimeField(mtxGenerator, q));
+        }
+        return generatingSet;
+    }
+    
+        /**
+     * This method produces a <code>List&ltPGL2_PrimeField&gt</code> of size p+1
+     * containing the LPS generators for the group PGL2(F_q) (or the subgroup
+     * PSL2(F_q), depending on whether or not p is a square mod q).
+     * 
+     * <p>
+     * Note that the returned List will typically contain repeated 
+     * elements when p &ge; q<sup>2</sup>/4.
+     * </p>
+     * 
+     * @param p An <code>int</code> prime.
+     * @param q A <code>short</code> integer prime different from p.
+     * 
+     * @return A <code>List&ltPGL2_PrimeField&gt</code> of size p+1
+     * containing the LPS generators for the group PGL2(F_q) (or the subgroup
+     * PSL2(F_q), depending on whether or not p is a square mod q).
+     */
+    public static List<PGL2ByteField> getPGL2ByteFieldGenerators(int p, ByteField f_q) {
+        List<int[][]> generatorReps = LPSConstructionUtility.getLPSMatrixGeneratorReps(p, f_q.getOrder()); 
+        List<PGL2ByteField> generatingSet = new ArrayList<PGL2ByteField>(generatorReps.size());
+        for (int[][] mtxGenerator : generatorReps) {
+            generatingSet.add(new PGL2ByteField((byte) mtxGenerator[0][0], (byte) mtxGenerator[0][1], (byte) mtxGenerator[1][0], (byte) mtxGenerator[1][1], f_q));
         }
         return generatingSet;
     }

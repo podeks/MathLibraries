@@ -293,7 +293,7 @@ public class ObservableCayleyColorGraphBuilder<G extends Group<G>> {
         diam--;
 
         if (!terminated) {
-            System.out.println("SORTING TARGET LISTS...");
+            //System.out.println("SORTING TARGET LISTS...");
             for (ProgressListener listener : listeners) {
                 listener.update("status", 1);
             }

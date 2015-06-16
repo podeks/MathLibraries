@@ -2,6 +2,8 @@ package fastgroups;
 
 import api.Group;
 import finitefields.ByteField;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -15,7 +17,7 @@ public class GL4ByteField implements Group<GL4ByteField>{
     private byte a41, a42, a43, a44;
 
     
-    private byte q;
+    private short q;
     private ByteField f;
 
     public GL4ByteField(byte a11,byte a12,byte a13,byte a14,
@@ -23,7 +25,7 @@ public class GL4ByteField implements Group<GL4ByteField>{
             byte a31,byte a32,byte a33, byte a34,
             byte a41,byte a42,byte a43, byte a44, ByteField f) {
         this.f = f;
-        q= (byte) f.getOrder();
+        q= (short) f.getOrder();
         this.a11 = a11;
         this.a12 = a12;
         this.a13 = a13;
@@ -82,7 +84,7 @@ public class GL4ByteField implements Group<GL4ByteField>{
      * A static helper for producing the identity element of GL4ByteField 
      * over the field f.
      * 
-     * @param qf a <code>ByteField</code>.
+     * @param f a <code>ByteField</code>.
      * @return The identity element of GL4ByteField.
      */
     public static GL4ByteField constructIdentity(ByteField f) {
@@ -97,6 +99,13 @@ public class GL4ByteField implements Group<GL4ByteField>{
                 g.getField() );
     }
 
+    public static Set<GL4ByteField> convert(Set<GLnByteField> set) {
+        Set<GL4ByteField> newSet = new HashSet<GL4ByteField>(set.size()+1, 1.0f);
+        for (GLnByteField g : set) {
+            newSet.add(convert(g));
+        }
+        return newSet;
+    }
 
     /**
      * An override of the <code>equals</code> method so as to return
@@ -127,7 +136,7 @@ public class GL4ByteField implements Group<GL4ByteField>{
                     a42==((GL4ByteField) h).a42 &&
                     a43==((GL4ByteField) h).a43 &&
                     a44==((GL4ByteField) h).a44 &&
-                    q==((GL4ByteField) h).getFieldOrder());
+                    q==((GL4ByteField) h).q);
         }
         return false;
     }
@@ -199,10 +208,13 @@ public class GL4ByteField implements Group<GL4ByteField>{
      * 
      * @return The order of the base field.
      */
-    public byte getFieldOrder(){
-        return q;
+    public int getFieldOrder(){
+        return f.getOrder();
     }
 
+    public ByteField getField() {
+        return f;
+    }
 
     /**
      * Computes the determinant of this element mod q, where q is the order of the base field.
@@ -285,7 +297,7 @@ public class GL4ByteField implements Group<GL4ByteField>{
      */
     @Override
     public boolean isOperationalWith(GL4ByteField h) {
-        return q==h.getFieldOrder();
+        return q==h.q;
     }
 
     /**
@@ -302,23 +314,23 @@ public class GL4ByteField implements Group<GL4ByteField>{
      */
     @Override
     public String toString() {
-        return "[" + f.getElement(a11).toString() + ", " + f.getElement(a12).toString() + ", " + f.getElement(a13).toString() + f.getElement(a14).toString() + "; " 
-                 + f.getElement(a21).toString() + ", " + f.getElement(a22).toString() + ", " + f.getElement(a23).toString() + f.getElement(a24).toString() + "; " 
-                 + f.getElement(a31).toString() + ", " + f.getElement(a32).toString() + ", " + f.getElement(a33).toString() + f.getElement(a34).toString() + "; " 
-                + f.getElement(a41).toString() + ", " + f.getElement(a42).toString() + ", " + f.getElement(a43).toString() + f.getElement(a44).toString() + "]";
+        return "[" + f.getElement(a11).toString() + ", " + f.getElement(a12).toString() + ", " + f.getElement(a13).toString() + ", " + f.getElement(a14).toString() + "; " 
+                 + f.getElement(a21).toString() + ", " + f.getElement(a22).toString() + ", " + f.getElement(a23).toString() + ", " + f.getElement(a24).toString() + "; " 
+                 + f.getElement(a31).toString() + ", " + f.getElement(a32).toString() + ", " + f.getElement(a33).toString() + ", " + f.getElement(a34).toString() + "; " 
+                + f.getElement(a41).toString() + ", " + f.getElement(a42).toString() + ", " + f.getElement(a43).toString() + ", "  + f.getElement(a44).toString() + "]";
     }
     
     /**
      * Returns a representation of the element making the call as a String
-     * consisting of the four entries of the matrix, followed by the field order,
+     * consisting of the byte entries of the matrix, followed by the field order,
      * all separated by single spaces.
      * 
      * @return A String representation of the element making the call
      * consisting of the four entries of the matrix, followed by the field order,
      * all separated by single spaces.
      */
-//    public String toUnpunctuatedString() {
-//        return Short.toString(a)+" "+Short.toString(b)+" "+Short.toString(c)+" "+Short.toString(d)+" "+Short.toString(q);
-//    }
+    public String toUnpunctuatedString() {
+        return a11+" "+a12+" "+a13+" "+a14+" "+a21+" "+a22+" "+a23+" "+a24+" "+a31+" "+a32+" "+a33+" "+a34+" "+a41+" "+a42+" "+a43+" "+a44+" "+q;
+    }
 
 }

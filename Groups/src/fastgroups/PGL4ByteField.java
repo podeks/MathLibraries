@@ -2,6 +2,8 @@ package fastgroups;
 
 import api.Group;
 import finitefields.ByteField;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -52,6 +54,21 @@ public class PGL4ByteField implements Group<PGL4ByteField>{
                 g.getField() );
     }
     
+    public static Set<PGL4ByteField> convert(Set<PGLnByteField> set) {
+        Set<PGL4ByteField> newSet = new HashSet<PGL4ByteField>(set.size()+1, 1.0f);
+        for (PGLnByteField g : set) {
+            newSet.add(convert(g));
+        }
+        return newSet;
+    }
+    public ByteField getField() {
+        return rep.getField();
+    }
+    
+    public int getFieldOrder() {
+        return rep.getFieldOrder();
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (o instanceof PGL4ByteField) {
@@ -70,6 +87,9 @@ public class PGL4ByteField implements Group<PGL4ByteField>{
         return rep.toString();
     }
     
+    public String toUnpunctuatedString() {
+        return rep.toUnpunctuatedString();
+    }
     
     @Override
     public PGL4ByteField leftProductBy(PGL4ByteField h) {

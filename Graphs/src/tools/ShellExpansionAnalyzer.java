@@ -346,7 +346,7 @@ public class ShellExpansionAnalyzer<S> {
         return true;
     }
     
-    /**
+     /**
      * This method writes the three arrays s_n, e_n, and t_n to a text file (see
      * items (ai), (aii), and (aiii) in the class description for the 
      * definitions of these arrays).
@@ -367,6 +367,42 @@ public class ShellExpansionAnalyzer<S> {
         } catch (IOException ex) {
             Logger.getLogger(ShellExpansionAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
+        }
+        
+        StringBuilder line;
+        
+        for (int i=0; i<=diameter; i++) {
+            line = new StringBuilder();
+            line.append(s_n.get(i)).append(' ').append(e_n.get(i)).append(' ').append(t_n.get(i)).append('\n');
+            fw.write(line.toString());
+        }
+        
+        fw.close();
+        
+        return true;
+    }
+    
+    /**
+     * Same as writeRadialDataToFile(File f), but with the passed String[] headers 
+     * written as the first lines of the File f.
+     * 
+     * @param f The file to which the data is written
+     * @param h The first line written to file.
+     * @return true if the data was successfully written to file.
+     * @throws IOException 
+     */
+    public boolean writeRadialDataToFile(File f, String[] headers) throws IOException {
+        
+        FileWriter fw;
+        try {
+            fw = new FileWriter(f);
+        } catch (IOException ex) {
+            Logger.getLogger(ShellExpansionAnalyzer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        
+        for (int i = 0; i< headers.length; i++) {
+            fw.write(headers[i]+"\n");
         }
         
         StringBuilder line;

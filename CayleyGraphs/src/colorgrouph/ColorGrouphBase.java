@@ -104,11 +104,12 @@ public class ColorGrouphBase implements ColorGrouph {
         
         
         degree = 0;
-        while (list.get(degree)[2]>degree) {
+        while (degree<size && list.get(degree)[2]>degree) {
             degree++;
         }
         
-        int numVerts = size/degree;
+        int numVerts = (degree != 0) ? size/degree : 0;
+
         colorKeyedNeighborSets = new ArrayList<ColorMapping>(numVerts);
         shellStartIndices = new ArrayList<Integer>();
         
@@ -116,7 +117,7 @@ public class ColorGrouphBase implements ColorGrouph {
             GrouphVertex vert = new GrouphVertex(is);
             colorKeyedNeighborSets.add(new ColorMapping(vert));
         }
-        root=colorKeyedNeighborSets.get(0).getSource();
+        root= (numVerts != 0) ? colorKeyedNeighborSets.get(0).getSource() : null;
         
         colorInvolution = new HashMap<Integer, Integer>(degree + 1, 1.0f);
         for (int i=1; i<=degree; i++) {
@@ -144,29 +145,33 @@ public class ColorGrouphBase implements ColorGrouph {
         int shellStart = 0;
         boolean shellStartVert=true;
         
-        ColorMapping fiber = colorKeyedNeighborSets.get(iSrc-1);
-        while (iterator.hasNext()) {
-            int[] sparseEntry = iterator.next();
-            
-            if (sparseEntry[0] != iSrc) {
-                if (shellStartVert) {
-                    shellStartIndices.add(iSrc-1);
-                    //prevShellStart=shellStart;
-                    shellStart = iSrc;
-                } 
-                shellStartVert=true;
-                iSrc++;
-                fiber = colorKeyedNeighborSets.get(iSrc-1);
-                //shellStartVert=true;
+        if (numVerts != 0) {
+
+            ColorMapping fiber = colorKeyedNeighborSets.get(iSrc - 1);
+            while (iterator.hasNext()) {
+                int[] sparseEntry = iterator.next();
+
+                if (sparseEntry[0] != iSrc) {
+                    if (shellStartVert) {
+                        shellStartIndices.add(iSrc - 1);
+                        //prevShellStart=shellStart;
+                        shellStart = iSrc;
+                    }
+                    shellStartVert = true;
+                    iSrc++;
+                    fiber = colorKeyedNeighborSets.get(iSrc - 1);
+                    //shellStartVert=true;
+                }
+                if (sparseEntry[1] < shellStart) {
+                    shellStartVert = false;
+                }
+                fiber.set(sparseEntry[2], colorKeyedNeighborSets.get(sparseEntry[1] - 1).getSource());
+                
             }
-            if (sparseEntry[1]<shellStart) {
-                shellStartVert=false;
-            }
-            fiber.set(sparseEntry[2], colorKeyedNeighborSets.get(sparseEntry[1]-1).getSource());
         }
         navigator = new CGNavigator(this);
         shortestPathStore = new HashMap<GrouphVertex, List<Integer>>();
-        
+        //System.out.println("SIZE: " + this.getNumberOfVertices() + " : " +this.getNumberOfEdges());
         
 //        short color=0;
 //        int degree = 0;
@@ -226,7 +231,13 @@ public class ColorGrouphBase implements ColorGrouph {
                 int[] entries = new int[3];
                 for (String t: s.split(" ")) {
                     //entriesList.add(Short.valueOf(t));//Short.parseShort(t));
-                    entries[j] = Integer.valueOf(t);
+                    try {
+                        entries[j] = Integer.valueOf(t);
+                    } catch (java.lang.NumberFormatException e) {
+                        return new ArrayList<int[]>();
+                    } catch (java.lang.IndexOutOfBoundsException e) {
+                        return new ArrayList<int[]>();
+                    }
                     j++;
                 }
                 list.add(entries);
@@ -236,7 +247,7 @@ public class ColorGrouphBase implements ColorGrouph {
             fr.close();
             
             long endTime = System.nanoTime();
-            System.out.println((endTime - startTime)/1000000);
+            System.out.println((endTime - startTime)/1000000 + " seconds");
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ColorGrouphBase.class.getName()).log(Level.SEVERE, null, ex);
@@ -333,11 +344,14 @@ public class ColorGrouphBase implements ColorGrouph {
         }
     }
 
-    public static boolean writeToFile(File file, Collection<GrouphVertex> col, String source) throws IOException {
+    public static boolean writeToFile(File file, Collection<GrouphVertex> col, int order, String source) throws IOException {
         FileWriter fw;
         fw = new FileWriter(file);
         StringBuilder line = new StringBuilder();
         line.append("ORIGIN: ").append(source).append('\n');
+        fw.write(line.toString());
+        line = new StringBuilder();
+        line.append("ORDER: ").append(order).append('\n');
         fw.write(line.toString());
         for (GrouphVertex s : col) {
             line = new StringBuilder();
@@ -532,12 +546,12 @@ public class ColorGrouphBase implements ColorGrouph {
     }
 
     @Override
-    public int getNumberOfVertices() {
+    public final int getNumberOfVertices() {
         return colorKeyedNeighborSets.size();
     }
 
     @Override
-    public int getNumberOfEdges() {
+    public final int getNumberOfEdges() {
         return colorKeyedNeighborSets.size() * colorInvolution.size();
     }
 

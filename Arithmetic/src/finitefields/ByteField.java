@@ -101,6 +101,41 @@ public class ByteField {
         return null;
 
     }
+    
+        private static int log2(int n) {
+        int log=0;
+        int quot = n;
+        while (quot%2==0) {
+            quot=quot/2;
+            log++;
+        }
+        return log;
+    }
+    
+    /**
+     * A static convenience method for creating a finite field of order less than or equal to 256.
+     * @param q any <code>short</code> integer prime power less than or equal to 256. 
+     * @return a <code>ByteField</code> object modeling the field of q elements.
+     */
+    public static ByteField getField(short q) {
+        if (Arithmetic.isPrime(q))
+            return getPrimeField(q);
+        int perfSqrt = Arithmetic.perfSqrt(q);
+        if (Arithmetic.isPrime(perfSqrt))
+            return getQuadExtension((short) perfSqrt);
+        if (q%2==0) {
+           return getChar2Field(log2(q));
+        }
+        if (q==125)
+            return getF125();
+        if (q==27)
+            return getF27();
+        if (q==81)
+            return getF81();
+        if (q==243)
+            return getF243();
+        return null;
+    }
 
     /**
      * A static convenience method for creating a prime field.
